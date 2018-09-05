@@ -14,19 +14,20 @@
  * @param {commonmark.Node} tree commonmark.js Node object
  * @return {Node} DOM Node object
  */
-function render(document, tree)
+export function render(document, tree)
 {
     let walker = tree.walker();
     let ancestors = [];
     for (let step = walker.next(); step != null; step = walker.next()) {
         if (step.entering) {
+            let node = step.node;
             let child = null;
-            switch (step.node.type) {
+            switch (node.type) {
             case "document":
                 child = document.createElement("div");
                 break;
             case "heading":
-                child = document.createElement("h" + step.node.level);
+                child = document.createElement("h" + node.level);
                 break;
             case "paragraph":
                 child = document.createElement("p");
@@ -37,9 +38,18 @@ function render(document, tree)
             case "strong":
                 child = document.createElement("strong");
                 break;
+            case "link":
+                child = document.createElement("a");
+                child.setAttribute("href", node.destination);
+                if (node.title != "") {
+                    child.setAttribute("title", node.title);
+                }
+                break;
             default:
-                console.log("Falling back: " + step.node.type);
-                child = document.createElement("span");
+                console.log("Falling back: " + node.type);
+                if (node.isContainer) {
+                    child = document.createElement("span");
+                }
                 break;
             case "thematic_break":
                 ancestors[ancestors.length - 1].appendChild(
@@ -47,11 +57,11 @@ function render(document, tree)
                 break;
             case "text":
                 ancestors[ancestors.length - 1].appendChild(
-                    document.createTextNode(step.node.literal));
+                    document.createTextNode(node.literal));
                 break;
             case "softbreak":
                 ancestors[ancestors.length - 1].appendChild(
-                    document.createTextNode(" "));
+                    document.createTextNode("\n"));
                 break;
             }
             if (child != null) {
@@ -67,7 +77,3 @@ function render(document, tree)
         }
     }
 }
-
-export {
-    render,
-};
