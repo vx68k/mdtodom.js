@@ -52,28 +52,32 @@ export function render(document, tree)
                 }
                 break;
             case "thematic_break":
-                ancestors[ancestors.length - 1].appendChild(
-                    document.createElement("hr"));
+                child = document.createElement("hr");
+                break;
+            case "code":
+                child = document.createElement("code");
+                child.appendChild(document.createTextNode(node.literal));
                 break;
             case "text":
-                ancestors[ancestors.length - 1].appendChild(
-                    document.createTextNode(node.literal));
+                child = document.createTextNode(node.literal);
                 break;
             case "softbreak":
-                ancestors[ancestors.length - 1].appendChild(
-                    document.createTextNode("\n"));
+                child = document.createTextNode("\n");
                 break;
             }
             if (child != null) {
-                ancestors.push(child);
+                if (node.isContainer) {
+                    ancestors.push(child);
+                }
+                else {
+                    ancestors[ancestors.length - 1].appendChild(child);
+                }
             }
         }
         else if (ancestors.length > 1) {
             let child = ancestors.pop();
             ancestors[ancestors.length - 1].appendChild(child);
         }
-        else {
-            return ancestors[0];
-        }
     }
+    return ancestors[0];
 }
