@@ -17,7 +17,7 @@ let parser = new commonmark.Parser();
 let block = render(document, parser.parse("*something*"));
 
 let container = document.getElementById("container");
-element.appendChild(block);
+container.appendChild(block);
 ```
 
 # See also
