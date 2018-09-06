@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>example</title>
+</head>
+<body>
+<main id="container">
+</main>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.28.1/commonmark.min.js"
+    crossorigin="anonymous">
+</script>
+<script type="module" async>
+
+import { render } from "./mdtodom.js";
+
+fetch("README.md").then((response) => {
+    return response.text();
+}).then((text) => {
+    let parser = new commonmark.Parser();
+    let child = render(document, parser.parse(text));
+
+    let container = document.getElementById("container");
+    container.appendChild(child);
+}).catch((error) => {
+    window.alert(error);
+})
+
+</script>
+</body>
+</html>
