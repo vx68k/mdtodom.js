@@ -22,6 +22,10 @@ container.appendChild(block);
 
 # See also
 
+The [project home](https://vx68k.bitbucket.io/mdtodom.js/).
+
+## Informational references
+
 The [Fetch](https://fetch.spec.whatwg.org/) standard by WHATWG.
 
 The [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
