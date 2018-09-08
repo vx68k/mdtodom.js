@@ -62,32 +62,40 @@ export function render(document, tree)
                 }
                 break;
             default:
+                // No flows should come here.
                 console.log("Falling back: " + node.type);
-                if (node.isContainer) {
-                    child = document.createElement("span");
-                }
                 break;
-            case "thematic_break":
-                child = document.createElement("hr");
+            case "code_block":
+                child = document.createElement("pre");
+                // Somewhat ugly, isn't it?
+                {
+                    let code = document.createElement("code");
+                    code.appendChild(document.createTextNode(node.literal));
+                    child.appendChild(code);
+                }
                 break;
             case "code":
                 child = document.createElement("code");
                 child.appendChild(document.createTextNode(node.literal));
                 break;
-            case "text":
-                child = document.createTextNode(node.literal);
+            case "thematic_break":
+                child = document.createElement("hr");
                 break;
             case "softbreak":
                 child = document.createTextNode("\n");
                 break;
+            case "text":
+                child = document.createTextNode(node.literal);
+                break;
             }
-            if (child != null) {
-                if (node.isContainer) {
-                    ancestors.push(child);
+            if (node.isContainer) {
+                if (child == null) {
+                    child = document.createElement("span");
                 }
-                else {
-                    ancestors[ancestors.length - 1].appendChild(child);
-                }
+                ancestors.push(child);
+            }
+            else if (child != null) {
+                ancestors[ancestors.length - 1].appendChild(child);
             }
         }
         else if (ancestors.length > 1) {
