@@ -2,12 +2,12 @@ This file documents the `mdtodom.js` script.
 
 # Description
 
-The `mdtodom.js` script renders [`commonmark.js`] AST directly into DOM on
+The `mdtodom.js` script renders [commonmark.js] AST directly into DOM on
 modern browsers to make a webpage from a Markdown file.
 
 [![(License)](https://img.shields.io/badge/license-MIT-blue.svg)][MIT]
 
-[`commonmark.js`]: https://github.com/commonmark/commonmark.js
+[commonmark.js]: https://github.com/commonmark/commonmark.js
 
 [MIT]: https://opensource.org/licenses/MIT
 
