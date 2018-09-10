@@ -61,6 +61,14 @@ export function render(document, tree)
                     child.setAttribute("title", node.title);
                 }
                 break;
+            case "image":
+                // Container!
+                child = document.createElement("object");
+                child.setAttribute("data", node.destination);
+                if (node.title != "") {
+                    child.setAttribute("title", node.title);
+                }
+                break;
             default:
                 // No flows should come here.
                 console.log("Falling back: " + node.type);
