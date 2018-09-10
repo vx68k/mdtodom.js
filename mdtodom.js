@@ -40,7 +40,7 @@ export function render(document, tree)
             let child = null;
             switch (node.type) {
             case "document":
-                child = document.createElement("div");
+                child = document.createDocumentFragment();
                 break;
             case "heading":
                 child = document.createElement("h" + node.level);
