@@ -23,6 +23,105 @@
 
 // This file is a module script.
 
+export class DOMRenderer
+{
+    constructor(document)
+    {
+        this._document = document;
+    }
+
+    get document()
+    {
+        return this._document;
+    }
+
+    render(tree)
+    {
+        let walker = tree.walker();
+        let ancestors = [];
+        for (let step = walker.next(); step != null; step = walker.next()) {
+            let node = step.node;
+            if (step.entering) {
+                let child = null;
+                switch (node.type) {
+                case "document":
+                    child = this.document.createDocumentFragment();
+                    break;
+                case "heading":
+                    child = this.document.createElement("h" + node.level);
+                    break;
+                case "paragraph":
+                    child = this.document.createElement("p");
+                    break;
+                case "emph":
+                    child = this.document.createElement("em");
+                    break;
+                case "strong":
+                    child = this.document.createElement("strong");
+                    break;
+                case "link":
+                    child = this.document.createElement("a");
+                    child.setAttribute("href", node.destination);
+                    if (node.title != "") {
+                        child.setAttribute("title", node.title);
+                    }
+                    break;
+                case "image":
+                    // Container!
+                    child = this.document.createElement("object");
+                    child.setAttribute("data", node.destination);
+                    if (node.title != "") {
+                        child.setAttribute("title", node.title);
+                    }
+                    break;
+                default:
+                    // No flows should come here.
+                    console.log("Falling back: " + node.type);
+                    if (node.isContainer) {
+                        child = this.document.createElement("span");
+                    }
+                    break;
+                case "code_block":
+                    child = this.document.createElement("pre");
+                    // Somewhat ugly, isn't it?
+                    {
+                        let code = this.document.createElement("code");
+                        code.appendChild(
+                            this.document.createTextNode(node.literal));
+                        child.appendChild(code);
+                    }
+                    break;
+                case "code":
+                    child = this.document.createElement("code");
+                    child.appendChild(
+                        this.document.createTextNode(node.literal));
+                    break;
+                case "thematic_break":
+                    child = this.document.createElement("hr");
+                    break;
+                case "softbreak":
+                    child = this.document.createTextNode("\n");
+                    break;
+                case "text":
+                    child = this.document.createTextNode(node.literal);
+                    break;
+                }
+                if (node.isContainer) {
+                    ancestors.push(child);
+                }
+                else if (child != null) {
+                    ancestors[ancestors.length - 1].appendChild(child);
+                }
+            }
+            else if (node.type != "document") {
+                let child = ancestors.pop();
+                ancestors[ancestors.length - 1].appendChild(child);
+            }
+        }
+        return ancestors[0];
+    }
+}
+
 /**
  * Renders a commonmark.js AST into DOM.
  *
@@ -32,84 +131,6 @@
  */
 export function render(document, tree)
 {
-    let walker = tree.walker();
-    let ancestors = [];
-    for (let step = walker.next(); step != null; step = walker.next()) {
-        if (step.entering) {
-            let node = step.node;
-            let child = null;
-            switch (node.type) {
-            case "document":
-                child = document.createDocumentFragment();
-                break;
-            case "heading":
-                child = document.createElement("h" + node.level);
-                break;
-            case "paragraph":
-                child = document.createElement("p");
-                break;
-            case "emph":
-                child = document.createElement("em");
-                break;
-            case "strong":
-                child = document.createElement("strong");
-                break;
-            case "link":
-                child = document.createElement("a");
-                child.setAttribute("href", node.destination);
-                if (node.title != "") {
-                    child.setAttribute("title", node.title);
-                }
-                break;
-            case "image":
-                // Container!
-                child = document.createElement("object");
-                child.setAttribute("data", node.destination);
-                if (node.title != "") {
-                    child.setAttribute("title", node.title);
-                }
-                break;
-            default:
-                // No flows should come here.
-                console.log("Falling back: " + node.type);
-                break;
-            case "code_block":
-                child = document.createElement("pre");
-                // Somewhat ugly, isn't it?
-                {
-                    let code = document.createElement("code");
-                    code.appendChild(document.createTextNode(node.literal));
-                    child.appendChild(code);
-                }
-                break;
-            case "code":
-                child = document.createElement("code");
-                child.appendChild(document.createTextNode(node.literal));
-                break;
-            case "thematic_break":
-                child = document.createElement("hr");
-                break;
-            case "softbreak":
-                child = document.createTextNode("\n");
-                break;
-            case "text":
-                child = document.createTextNode(node.literal);
-                break;
-            }
-            if (node.isContainer) {
-                if (child == null) {
-                    child = document.createElement("span");
-                }
-                ancestors.push(child);
-            }
-            else if (child != null) {
-                ancestors[ancestors.length - 1].appendChild(child);
-            }
-        }
-        else if (ancestors.length > 1) {
-            let child = ancestors.pop();
-            ancestors[ancestors.length - 1].appendChild(child);
-        }
-    }
-    return ancestors[0];
+    let renderer = new DOMRenderer(document);
+    return renderer.render(tree);
 }
