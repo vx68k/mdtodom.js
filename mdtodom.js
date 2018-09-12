@@ -116,6 +116,9 @@ export class DOMRenderer
                 case "thematic_break":
                     child = this.document.createElement("hr");
                     break;
+                case "linebreak":
+                    child = this.document.createElement("br");
+                    break;
                 case "softbreak":
                     child = this.document.createTextNode("\n");
                     break;
