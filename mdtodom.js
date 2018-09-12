@@ -53,6 +53,9 @@ export class DOMRenderer
                 case "paragraph":
                     child = this.document.createElement("p");
                     break;
+                case "block_quote":
+                    child = this.document.createElement("blockquote");
+                    break;
                 case "emph":
                     child = this.document.createElement("em");
                     break;
