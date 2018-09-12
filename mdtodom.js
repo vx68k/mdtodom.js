@@ -56,6 +56,20 @@ export class DOMRenderer
                 case "block_quote":
                     child = this.document.createElement("blockquote");
                     break;
+                case "list":
+                    if (node.listType == "ordered") {
+                        child = this.document.createElement("ol");
+                        if (node.listStart != 1) {
+                            child.setAttribute("start", node.listStart);
+                        }
+                    }
+                    else {
+                        child = this.document.createElement("ul");
+                    }
+                    break;
+                case "item":
+                    child = this.document.createElement("li");
+                    break;
                 case "emph":
                     child = this.document.createElement("em");
                     break;
