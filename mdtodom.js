@@ -154,3 +154,25 @@ export function render(document, tree)
     let renderer = new DOMRenderer(document);
     return renderer.render(tree);
 }
+
+/**
+ * Wait for a script to load.
+ *
+ * @param {string} propertyName property name to check whether the script has
+ * been loaded or not
+ * @param {Node} node DOM node to listen a "load" event
+ */
+export function waitForScript(propertyName, node)
+{
+    return new Promise((resolve, reject) => {
+        if (propertyName in window) {
+            resolve();
+        }
+        else {
+            // @todo What if the script does not define the property?
+            node.addEventListener("load", function () {
+                resolve();
+            });
+        }
+    });
+}
