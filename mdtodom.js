@@ -23,6 +23,17 @@
 
 // This file is a module script.
 
+/**
+ * Markdown-to-DOM renderer.
+ *
+ * @module mdtodom
+ */
+
+/**
+ * DOM renderer for commonmark.js ASTs.
+ *
+ * @param {Document} document DOM document
+ */
 export class DOMRenderer
 {
     constructor(document)
@@ -30,11 +41,20 @@ export class DOMRenderer
         this._document = document;
     }
 
+    /**
+     * Returns the DOM document.
+     */
     get document()
     {
         return this._document;
     }
 
+    /**
+     * Renders a commonmark.js AST into DOM.
+     *
+     * @param {commonmark.Node} tree AST
+     * @return {(DocumentFragment|Node)} DOM node tree
+     */
     render(tree)
     {
         let walker = tree.walker();
