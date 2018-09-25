@@ -111,6 +111,35 @@ export class DOMRenderer
                         child.setAttribute("title", node.title);
                     }
                     break;
+
+                case "code_block":
+                    child = this.document.createElement("pre");
+                    child.appendChild(this.createCodeElement(node.literal));
+                    break;
+                case "code":
+                    child = this.createCodeElement(node.literal);
+                    break;
+                case "html_block":
+                    // For security reasons, HTML blocks are just exposed as
+                    // text nodes.
+                    child = this.document.createTextNode(node.literal);
+                    break;
+                case "text":
+                    child = this.document.createTextNode(node.literal);
+                    break;
+                case "softbreak":
+                    child = this.document.createTextNode("\n");
+                    break;
+
+                // Group of empty elements.
+                case "linebreak":
+                    child = this.document.createElement("br");
+                    break;
+                case "thematic_break":
+                    child = this.document.createElement("hr");
+                    break;
+
+                // Anything else.
                 default:
                     // No flows should come here.
                     console.log("Falling back: " + node.type);
@@ -118,47 +147,38 @@ export class DOMRenderer
                         child = this.document.createElement("span");
                     }
                     break;
-                case "code_block":
-                    child = this.document.createElement("pre");
-                    // Somewhat ugly, isn't it?
-                    {
-                        let code = this.document.createElement("code");
-                        code.appendChild(
-                            this.document.createTextNode(node.literal));
-                        child.appendChild(code);
-                    }
-                    break;
-                case "code":
-                    child = this.document.createElement("code");
-                    child.appendChild(
-                        this.document.createTextNode(node.literal));
-                    break;
-                case "thematic_break":
-                    child = this.document.createElement("hr");
-                    break;
-                case "linebreak":
-                    child = this.document.createElement("br");
-                    break;
-                case "softbreak":
-                    child = this.document.createTextNode("\n");
-                    break;
-                case "text":
-                    child = this.document.createTextNode(node.literal);
-                    break;
                 }
                 if (node.isContainer) {
-                    ancestors.push(child);
+                    ancestors.unshift(child);
                 }
                 else if (child != null) {
-                    ancestors[ancestors.length - 1].appendChild(child);
+                    ancestors[0].appendChild(child);
                 }
             }
             else if (node.type != "document") {
-                let child = ancestors.pop();
-                ancestors[ancestors.length - 1].appendChild(child);
+                let child = ancestors.shift();
+                if (node.type == "heading") {
+                    child.setAttribute(
+                        "id",
+                         child.textContent.toLowerCase().replace(/\s/g, "-"));
+                }
+                ancestors[0].appendChild(child);
             }
         }
         return ancestors[0];
+    }
+
+    /**
+     * Creates a {@code code} element with text.
+     *
+     * @param {string} text code text
+     * @return {Element} {@code code} element
+     */
+    createCodeElement(text)
+    {
+        let code = this.document.createElement("code");
+        code.appendChild(this.document.createTextNode(text));
+        return code;
     }
 }
 
