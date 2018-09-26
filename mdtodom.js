@@ -53,10 +53,15 @@ export class DOMRenderer
      * Renders a commonmark.js AST into DOM.
      *
      * @param {commonmark.Node} tree AST
-     * @return {(DocumentFragment|Node)} DOM node tree
+     * @param {Node} root DOM node to be populated by content nodes, or `null`
+     * @return {(DocumentFragment|Node)} root DOM node
      */
-    render(tree)
+    render(tree, root)
     {
+        if (root == null) {
+            root = this.document.createDocumentFragment();
+        }
+
         let walker = tree.walker();
         let ancestors = [];
         for (let step = walker.next(); step != null; step = walker.next()) {
@@ -65,7 +70,7 @@ export class DOMRenderer
                 let child = null;
                 switch (node.type) {
                 case "document":
-                    child = this.document.createDocumentFragment();
+                    child = root;
                     break;
                 case "heading":
                     child = this.document.createElement("h" + node.level);
@@ -165,14 +170,14 @@ export class DOMRenderer
                 ancestors[0].appendChild(child);
             }
         }
-        return ancestors[0];
+        return root;
     }
 
     /**
-     * Creates a {@code code} element with text.
+     * Creates a `code` element with text.
      *
      * @param {string} text code text
-     * @return {Element} {@code code} element
+     * @return {Element} `code` element
      */
     createCodeElement(text)
     {
@@ -187,12 +192,13 @@ export class DOMRenderer
  *
  * @param {Document} document DOM Document object
  * @param {commonmark.Node} tree commonmark.js Node object
- * @return {Node} DOM Node object
+ * @param {Node} root DOM node to be populated by content nodes, or `null`
+ * @return {(DocumentFragment|Node)} root DOM node
  */
-export function render(document, tree)
+export function render(document, tree, root)
 {
     let renderer = new DOMRenderer(document);
-    return renderer.render(tree);
+    return renderer.render(tree, root);
 }
 
 /**
