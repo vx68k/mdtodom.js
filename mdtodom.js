@@ -63,46 +63,53 @@ export class DOMRenderer
         }
 
         let walker = tree.walker();
+        let document = this.document;
         let ancestors = [];
+        let parent = null;
         for (let step = walker.next(); step != null; step = walker.next()) {
             let node = step.node;
             if (step.entering) {
                 let child = null;
                 switch (node.type) {
                 case "document":
-                    child = root;
+                    parent = root;
                     break;
                 case "heading":
-                    child = this.document.createElement("h" + node.level);
+                    child = parent.appendChild(
+                        document.createElement("h" + node.level));
                     break;
                 case "paragraph":
-                    child = this.document.createElement("p");
+                    child = parent.appendChild(document.createElement("p"));
                     break;
                 case "block_quote":
-                    child = this.document.createElement("blockquote");
+                    child = parent.appendChild(
+                        document.createElement("blockquote"));
                     break;
                 case "list":
                     if (node.listType == "ordered") {
-                        child = this.document.createElement("ol");
+                        child = parent.appendChild(
+                            document.createElement("ol"));
                         if (node.listStart != 1) {
                             child.setAttribute("start", node.listStart);
                         }
                     }
                     else {
-                        child = this.document.createElement("ul");
+                        child = parent.appendChild(
+                            document.createElement("ul"));
                     }
                     break;
                 case "item":
-                    child = this.document.createElement("li");
+                    child = parent.appendChild(document.createElement("li"));
                     break;
                 case "emph":
-                    child = this.document.createElement("em");
+                    child = parent.appendChild(document.createElement("em"));
                     break;
                 case "strong":
-                    child = this.document.createElement("strong");
+                    child = parent.appendChild(
+                        document.createElement("strong"));
                     break;
                 case "link":
-                    child = this.document.createElement("a");
+                    child = parent.appendChild(document.createElement("a"));
                     child.setAttribute("href", node.destination);
                     if (node.title != "") {
                         child.setAttribute("title", node.title);
@@ -110,65 +117,83 @@ export class DOMRenderer
                     break;
                 case "image":
                     // Container!
-                    child = this.document.createElement("object");
-                    child.setAttribute("data", node.destination);
+                    child = parent.appendChild(document.createElement("img"));
+                    child.setAttribute("src", node.destination);
                     if (node.title != "") {
                         child.setAttribute("title", node.title);
                     }
                     break;
 
                 case "code_block":
-                    child = this.document.createElement("pre");
-                    child.appendChild(this.createCodeElement(node.literal));
+                    parent.appendChild(document.createElement("pre"))
+                        .appendChild(this.createCodeElement(node.literal));
                     break;
                 case "code":
-                    child = this.createCodeElement(node.literal);
+                    parent.appendChild(this.createCodeElement(node.literal));
                     break;
                 case "html_block":
                     // For security reasons, HTML blocks are just exposed as
                     // text nodes.
-                    child = this.document.createTextNode(node.literal);
+                    parent.appendChild(document.createTextNode(node.literal));
                     break;
                 case "text":
-                    child = this.document.createTextNode(node.literal);
+                    parent.appendChild(document.createTextNode(node.literal));
                     break;
                 case "softbreak":
-                    child = this.document.createTextNode("\n");
+                    parent.appendChild(document.createTextNode("\n"));
                     break;
 
                 // Group of empty elements.
                 case "linebreak":
-                    child = this.document.createElement("br");
+                    parent.appendChild(document.createElement("br"));
                     break;
                 case "thematic_break":
-                    child = this.document.createElement("hr");
+                    parent.appendChild(document.createElement("hr"));
                     break;
 
                 // Anything else.
                 default:
                     // No flows should come here.
-                    console.log("Falling back: " + node.type);
+                    console.debug("Falling back: " + node.type);
                     if (node.isContainer) {
-                        child = this.document.createElement("span");
+                        child = document.createElement("span");
+                        parent.appendChild(child);
                     }
                     break;
                 }
-                if (node.isContainer) {
-                    ancestors.unshift(child);
-                }
-                else if (child != null) {
-                    ancestors[0].appendChild(child);
+                if (child != null) {
+                    ancestors.push(parent);
+                    parent = child;
                 }
             }
-            else if (node.type != "document") {
-                let child = ancestors.shift();
-                if (node.type == "heading") {
-                    child.setAttribute(
-                        "id",
-                         child.textContent.toLowerCase().replace(/\s/g, "-"));
+            else {
+                let text;
+                switch (node.type) {
+                case "document":
+                    parent = null;
+                    break;
+                case "heading":
+                    text = parent.textContent;
+                    parent.setAttribute(
+                        "id", text.toLowerCase().replace(/\s/g, "-"));
+                    break;
+                case "image":
+                    text = parent.textContent;
+                    while (parent.hasChildNodes()) {
+                        parent.removeChild(parent.lastChild);
+                    }
+                    parent.setAttribute("alt", text);
+                    break;
+                default:
+                    break;
                 }
-                ancestors[0].appendChild(child);
+                if (parent != null) {
+                    parent = ancestors.pop();
+                }
             }
+        }
+        if (ancestors.length > 0) {
+            console.debug("Ancestors stack not empty")
         }
         return root;
     }
