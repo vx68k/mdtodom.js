@@ -1,5 +1,5 @@
 // mdtodom.js
-// Copyright (C) 2018 Kaz Nishimura
+// Copyright (C) 2018-2019 Kaz Nishimura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -131,16 +131,16 @@ export class DOMRenderer
                 case "code":
                     parent.appendChild(this.createCodeElement(node.literal));
                     break;
-                case "html_block":
-                    // For security reasons, HTML blocks are just exposed as
-                    // text nodes.
-                    parent.appendChild(document.createTextNode(node.literal));
-                    break;
                 case "text":
                     parent.appendChild(document.createTextNode(node.literal));
                     break;
                 case "softbreak":
                     parent.appendChild(document.createTextNode("\n"));
+                    break;
+                case "html_block":
+                    // For security reasons, any inserted script elements must
+                    // not be executed.
+                    parent.insertAdjacentHTML("beforeend", node.literal);
                     break;
 
                 // Group of empty elements.
