@@ -26,7 +26,7 @@
 /**
  * Browser script to redirect the browser to a new location.
  *
- * @module redirect
+ * @module redirect.js
  */
 
 /**
