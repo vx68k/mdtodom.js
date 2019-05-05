@@ -23,7 +23,13 @@
 
 // NOTE: this file is a module script.
 
-let root = document.documentElement;
-if ("newLocation" in root.dataset) {
-    location.replace(root.dataset.newLocation + location.search);
+function redirect(window)
+{
+    let root = window.document.documentElement;
+    if ("newLocation" in root.dataset) {
+        let location = window.location;
+        location.replace(root.dataset.newLocation + location.search);
+    }
 }
+
+redirect(window);
