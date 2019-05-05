@@ -1,6 +1,15 @@
 {
-    "name": "mdtodom",
+    "name": "@kazssym/mdtodom",
     "version": "1.0.0-beta.0",
-    "browser": true,
+    "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
+    "license": "MIT",
+    "files": [
+        "**/*.js"
+    ],
+    "browser": {},
+    "repository": {
+        "type": "hg",
+        "url": "https://bitbucket.org/vx68k/mdtodom.js"
+    },
     "private": true
 }
