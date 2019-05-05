@@ -1,0 +1,7 @@
+**/bitbucket-pipelines.yml
+**/rocro.yml
+**/docker-compose.yml
+**/*.tgz
+**/*.rej
+**/*.orig
+**/*~

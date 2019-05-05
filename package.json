@@ -1,0 +1,6 @@
+{
+    "name": "mdtodom",
+    "version": "1.0.0-beta.0",
+    "browser": true,
+    "private": true
+}
