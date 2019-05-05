@@ -33,7 +33,7 @@
  * Redirects the browser to a specified location.
  * This function passes any query string unchanged to the new location.
  *
- * @param {Window} window a {@link Window} object
+ * @param {Window} window the <code>window</code> object of the browser
  */
 export function redirect(window)
 {
