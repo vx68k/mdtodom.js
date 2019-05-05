@@ -31,7 +31,7 @@
 
 /**
  * Redirects the browser to a specified location.
- * This function passes the query string unchanged to the new location.
+ * This function passes any query string unchanged to the new location.
  *
  * @param {Window} window a {@link Window} object
  */
