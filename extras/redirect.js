@@ -35,7 +35,7 @@
  *
  * @param {Window} window a {@link Window} object
  */
-function redirect(window)
+export function redirect(window)
 {
     let root = window.document.documentElement;
     if ("newLocation" in root.dataset) {
