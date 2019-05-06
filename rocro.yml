@@ -11,3 +11,7 @@ inspecode:
   misspell: {}
   eslint: {}
   jscpd: {}
+docstand:
+  documentation.js:
+    input:
+      - mdtodom.js
