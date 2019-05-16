@@ -30,10 +30,13 @@
  */
 
 /**
- * Redirects the browser to a specified location.
- * This function passes any query string unchanged to the new location.
+ * Redirects the browser to the location specified by the `data-new-location`
+ * attribute of the root element, or do nothing if the attribute is missing.
  *
- * @param {Window} window the <code>window</code> object of the browser
+ * This function passes any query string unchanged to the new location
+ * unlike the `Refresh` meta hack.
+ *
+ * @param {Window} window the `window` object of the browser
  */
 export function redirect(window)
 {
