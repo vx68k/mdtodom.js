@@ -31,7 +31,7 @@
 
 /**
  * Redirects the browser to the location specified by the `data-new-location`
- * attribute of the root element, or do nothing if the attribute is missing.
+ * attribute of the root element, or does nothing if the attribute is missing.
  *
  * This function passes any query string unchanged to the new location
  * unlike the `Refresh` meta hack.
