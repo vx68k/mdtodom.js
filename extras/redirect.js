@@ -31,7 +31,8 @@
 
 /**
  * Redirects the browser to the location specified by the `data-new-location`
- * attribute of the root element, or does nothing if the attribute is missing.
+ * attribute of the root element or the `canonical` link of the document;
+ * or does nothing if no location is specified.
  *
  * This function passes any query string unchanged to the new location
  * unlike the `Refresh` meta hack.
@@ -41,9 +42,23 @@
 export function redirect(window)
 {
     let root = window.document.documentElement;
+    let newLocation = null;
     if ("newLocation" in root.dataset) {
+        newLocation = root.dataset.newLocation;
+    }
+    if (newLocation == null) {
+        for (let link of root.getElementsByTagName("link")) {
+            for (let type of link.relList) {
+                if (type.toLowerCase() == "canonical") {
+                    newLocation = link.href;
+                    break;
+                }
+            }
+        }
+    }
+    if (newLocation != null) {
         let location = window.location;
-        location.replace(root.dataset.newLocation + location.search);
+        location.replace(newLocation + location.search);
     }
 }
 
