@@ -31,8 +31,8 @@
 
 /**
  * Redirects the browser to the location specified by the `data-new-location`
- * attribute of the root element or the `canonical` link of the document;
- * or does nothing if no location is specified.
+ * attribute of the root element or the `canonical` link of the document,
+ * if any.
  *
  * This function passes any query string unchanged to the new location
  * unlike the `Refresh` meta hack.
