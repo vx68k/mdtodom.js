@@ -1,4 +1,4 @@
-// redirect - browser script to redirect the browser to a new location
+// redirect.js - browser script to redirect the browser to a new location
 // Copyright (C) 2019 Kaz Nishimura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
