@@ -62,4 +62,5 @@ export function redirect(window)
     }
 }
 
+console.info("Loaded: %s", "redirect.js");
 redirect(window);
