@@ -140,4 +140,5 @@ function run(containerId) {
     }
 }
 
+console.info("Loaded: %s", "mdview.js");
 run("mdview");
