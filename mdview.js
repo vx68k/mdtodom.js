@@ -110,25 +110,34 @@ function sleep(millis)
     });
 }
 
-let container = document.getElementById("mdview");
-if (container != null) {
-    let path = null;
-    if (location.search.startsWith("?")) {
-        path = location.search.substring(1);
-        if (path.startsWith("view=")) {
-            path = path.substring(5);
+/**
+ * Loads and renders a Markdown document in a container element.
+ *
+ * @param {string} containerId DOM identifier of the conainer element
+ */
+function run(containerId) {
+    let container = document.getElementById(containerId);
+    if (container != null) {
+        let path = null;
+        if (location.search.startsWith("?")) {
+            path = location.search.substring(1);
+            if (path.startsWith("view=")) {
+                path = path.substring(5);
+            }
+            if (path.startsWith(".") || path.indexOf("/.") >= 0) {
+                path = null;
+            }
         }
-        if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-            path = null;
-        }
-    }
 
-    let node = document.getElementById("commonmark-script") || document;
-    Promise.race([
-        sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded("commonmark", node)
-    ]).then(() => loadPage(container, path))
-        .catch((reason) => {
-            throw new Error("Failed to load commonmark.js: " + reason);
-        });
+        let node = document.getElementById("commonmark-script") || document;
+        Promise.race([
+            sleep(5000).then(() => Promise.reject("Timed out")),
+            waitForScriptLoaded("commonmark", node)
+        ]).then(() => loadPage(container, path))
+            .catch((reason) => {
+                throw new Error("Failed to load commonmark.js: " + reason);
+            });
+    }
 }
+
+run("mdview");
