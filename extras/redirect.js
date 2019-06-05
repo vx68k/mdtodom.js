@@ -29,6 +29,11 @@
  * @module redirect.js
  */
 
+ /**
+  * Package version.
+  */
+ const PACKAGE_VERSION = "@PACKAGE_VERSION@";
+
 /**
  * Redirects the browser to the location specified by the `data-new-location`
  * attribute of the root element or the `canonical` link of the document,
@@ -62,5 +67,5 @@ export function redirect(window)
     }
 }
 
-console.info("Loaded: %s", "redirect.js");
+console.info("Loaded: %s %s", "redirect.js", PACKAGE_VERSION);
 redirect(window);
