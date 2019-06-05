@@ -4,12 +4,18 @@
     "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
     "license": "MIT",
     "files": [
+        "prepack.sh",
         "**/*.js"
     ],
     "browser": {},
     "repository": {
         "type": "hg",
         "url": "https://bitbucket.org/vx68k/mdtodom.js"
+    },
+    "scripts": {
+        "prepack": "sh ./prepack.sh"
+    },
+    "devDependencies": {
     },
     "private": true
 }

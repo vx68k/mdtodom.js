@@ -1,6 +1,7 @@
 syntax: regexp
 (^|/)\.env$
 (^|/)node_modules$
+(^|/)dist$
 \.rej$
 \.orig$
 ~$
