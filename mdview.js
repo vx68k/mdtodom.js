@@ -31,6 +31,16 @@
 
 import { DOMRenderer } from "./mdtodom.js";
 
+ /**
+  * Package name.
+  */
+ const PACKAGE_NAME = "@PACKAGE_NAME@";
+
+ /**
+  * Package version.
+  */
+ const PACKAGE_VERSION = "@PACKAGE_VERSION@";
+
 function loadPage(container, path) {
     // Measuring timings.
     if ("gtag" in self && "performance" in self) {
@@ -140,5 +150,6 @@ function run(containerId) {
     }
 }
 
-console.info("Loaded: %s", "mdview.js");
+console.info("Loaded: %s (%s %s)", "mdview.js",
+    PACKAGE_NAME, PACKAGE_VERSION);
 run("mdview");
