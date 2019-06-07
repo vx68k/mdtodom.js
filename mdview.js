@@ -26,7 +26,7 @@
 /**
  * Client-side Markdown viewer.
  *
- * @module mdview
+ * @module mdview.js
  */
 
 import { DOMRenderer } from "./mdtodom.js";
