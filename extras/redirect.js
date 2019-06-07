@@ -30,6 +30,11 @@
  */
 
  /**
+  * Package name.
+  */
+ const PACKAGE_NAME = "@PACKAGE_NAME@";
+
+ /**
   * Package version.
   */
  const PACKAGE_VERSION = "@PACKAGE_VERSION@";
@@ -67,5 +72,6 @@ export function redirect(window)
     }
 }
 
-console.info("Loaded: %s %s", "redirect.js", PACKAGE_VERSION);
+console.info("Loaded: %s (%s %s)", "redirect.js",
+    PACKAGE_NAME, PACKAGE_VERSION);
 redirect(window);
