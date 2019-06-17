@@ -50,12 +50,10 @@
  *
  * This function passes any query string unchanged to the new location
  * unlike the `Refresh` meta hack.
- *
- * @param {Window} window the `window` object of the browser
  */
-export function run(window)
+export function run()
 {
-    let root = window.document.documentElement;
+    let root = document.documentElement;
     let newLocation = null;
     if ("newLocation" in root.dataset) {
         newLocation = root.dataset.newLocation;
@@ -70,12 +68,13 @@ export function run(window)
             }
         }
     }
+
     if (newLocation != null) {
-        let location = window.location;
+        // Redirect the browser to the new location.
         location.replace(newLocation + location.search);
     }
 }
 
 console.info("Loaded: %s (%s %s)", "redirect.js",
     PACKAGE_NAME, PACKAGE_VERSION);
-run(window);
+run();
