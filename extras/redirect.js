@@ -53,7 +53,7 @@
  *
  * @param {Window} window the `window` object of the browser
  */
-export function redirect(window)
+export function run(window)
 {
     let root = window.document.documentElement;
     let newLocation = null;
@@ -78,4 +78,4 @@ export function redirect(window)
 
 console.info("Loaded: %s (%s %s)", "redirect.js",
     PACKAGE_NAME, PACKAGE_VERSION);
-redirect(window);
+run(window);
