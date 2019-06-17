@@ -33,11 +33,15 @@ import { DOMRenderer } from "./mdtodom.js";
 
  /**
   * Package name.
+  *
+  * @private
   */
  const PACKAGE_NAME = "@PACKAGE_NAME@";
 
  /**
   * Package version.
+  *
+  * @private
   */
  const PACKAGE_VERSION = "@PACKAGE_VERSION@";
 
