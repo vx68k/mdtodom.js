@@ -26,6 +26,13 @@
 /**
  * Browser script to redirect the browser to a new location.
  *
+ * This script can be loaded in a *redirecting* HTML file as follows:
+ *
+ * ```html
+ * <script src="redirect.js" type="module" async>
+ * </script>
+ * ```
+ *
  * @module redirect.js
  */
 
