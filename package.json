@@ -1,6 +1,6 @@
 {
     "name": "@kazssym/mdtodom",
-    "version": "1.0.0-beta.0",
+    "version": "1.0.0-beta.1",
     "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
     "license": "MIT",
     "files": [
@@ -17,6 +17,5 @@
     },
     "devDependencies": {
         "terser": "~4"
-    },
-    "private": true
+    }
 }
