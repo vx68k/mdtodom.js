@@ -125,6 +125,21 @@ function sleep(millis)
 }
 
 /**
+ * Gets the `commonmark.js` script loaded.
+ *
+ * @return {Promise} a promise object for the `commonmark.js` script
+ * @private
+ */
+function loadCommonMark()
+{
+    let node = document.getElementById("commonmark-script") || document;
+    return Promise.race([
+        sleep(5000).then(() => Promise.reject("Timed out")),
+        waitForScriptLoaded("commonmark", node)
+    ]);
+}
+
+/**
  * Loads and renders a Markdown document in a container element.
  *
  * @param {string} containerId DOM identifier of the conainer element
@@ -143,11 +158,8 @@ function run(containerId) {
             }
         }
 
-        let node = document.getElementById("commonmark-script") || document;
-        Promise.race([
-            sleep(5000).then(() => Promise.reject("Timed out")),
-            waitForScriptLoaded("commonmark", node)
-        ]).then(() => loadPage(container, path))
+        loadCommonMark()
+            .then(() => loadPage(container, path))
             .catch((reason) => {
                 throw new Error("Failed to load commonmark.js: " + reason);
             });
