@@ -2,7 +2,7 @@
 
 distdir="`pwd`"/dist
 
-PACKAGE_NAME="${npm_package_name:-mdtodom}"
+PACKAGE_NAME="${npm_package_name:-mdtodom.js}"
 PACKAGE_VERSION="${npm_package_version:-(unversioned)}"
 
 SCRIPTS="mdtodom.js mdview.js"
