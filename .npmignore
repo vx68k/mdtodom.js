@@ -1,5 +1,5 @@
-**/bitbucket-pipelines.yml
 **/rocro.yml
+**/bitbucket-pipelines.yml
 **/docker-compose.yml
 **/*.tgz
 **/*.rej
