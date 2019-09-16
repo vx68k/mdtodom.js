@@ -5,7 +5,7 @@ distdir="`pwd`"/dist
 PACKAGE_NAME="${npm_package_name:-mdtodom}"
 PACKAGE_VERSION="${npm_package_version:-(unversioned)}"
 
-SCRIPTS="mdtodom.js mdview.js extras/*.js"
+SCRIPTS="mdtodom.js mdview.js"
 
 rm -rf "$distdir" || exit 1
 mkdir -p "$distdir" || exit 1
