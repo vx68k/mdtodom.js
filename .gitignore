@@ -1,0 +1,5 @@
+deploy
+node_modules
+*.rej
+*.orig
+*~
