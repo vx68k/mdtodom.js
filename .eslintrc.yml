@@ -5,9 +5,20 @@
 # permitted in any medium without royalty provided the copyright notice and
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
+extends: eslint:recommended
 parserOptions:
   sourceType: module
 env:
-  browser: true
   es6: true
+  browser: true
+overrides:
+  - files:
+      - etc/*.js
+    parserOptions:
+      sourceType: script
+    env:
+      browser: false
+      node: true
+ignorePatterns:
+  - /deploy/*
 root: true
