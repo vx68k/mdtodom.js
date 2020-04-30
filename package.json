@@ -13,7 +13,7 @@
         "url": "https://bitbucket.org/vx68k/mdtodom.js"
     },
     "scripts": {
-        "prepack": "sh ./prepack.sh"
+        "prepare": "node ./etc/prepare.js *.js"
     },
     "devDependencies": {
         "terser": "~4"
