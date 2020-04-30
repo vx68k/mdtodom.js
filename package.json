@@ -9,8 +9,8 @@
     ],
     "browser": {},
     "repository": {
-        "type": "hg",
-        "url": "https://bitbucket.org/vx68k/mdtodom.js"
+        "type": "git",
+        "url": "https://github.com/vx68k/mdtodom.js.git"
     },
     "scripts": {
         "prepare": "node ./etc/prepare.js *.js"
