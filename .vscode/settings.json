@@ -1,7 +1,7 @@
 {
-        "files.exclude": {
-            "**/*.rej": true,
-            "**/*.orig": true,
-            "**/*~": true
-        }
+    "files.exclude": {
+        "**/*.rej": true,
+        "**/*.orig": true,
+        "**/*~": true
     }
+}
