@@ -12,6 +12,9 @@
         "commonmark"
     ],
     "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
+    "bugs": {
+        "url": "https://bitbucket.org/kazssym/mdtodom.js/issues/new"
+    },
     "license": "MIT",
     "author": {
         "name": "Kaz Nishimura",
