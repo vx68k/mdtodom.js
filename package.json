@@ -3,6 +3,10 @@
     "version": "1.0.0-beta.1",
     "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
     "license": "MIT",
+    "author": {
+        "name": "Kaz Nishimura",
+        "email": "kazssym@linuxfront.com"
+    },
     "files": [
         "browser/**/*.js",
         "etc",
