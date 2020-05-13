@@ -6,7 +6,7 @@
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
 variables:
-  distName: kazssym-mdtodom-1.0.0-beta.2
+  distName: kazssym-mdtodom-1.0.0-beta.3
 trigger:
   - master
   - release/*
