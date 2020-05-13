@@ -29,21 +29,29 @@ let {spawnSync} = require("child_process");
 let {mkdirSync, readFileSync, writeFileSync} = require("fs");
 let Terser = require("terser");
 
-const PACKAGE_NAME = env["npm_package_name"] || "redirect.js";
-const PACKAGE_VERSION = env["npm_package_version"] || "(unversioned)";
+const PACKAGE_NAME = env["npm_package_name"] || "unknown";
+const PACKAGE_VERSION = env["npm_package_version"] || "0.0.0";
 
 /**
  * Options for `terser.minify`.
  */
-const MINIFY_OPTIONS = {
+const MINIFY_OPTIONS = Object.freeze({
     ecma: 6,
     module: true,
-};
+});
+
+/**
+ * Options for reading and writing files.
+ */
+const FILE_OPTIONS = Object.freeze({
+    encoding: "UTF-8",
+});
 
 /**
  * Prepares scripts for deployment.
  *
  * @param {Array<string>} args command-line arguments after the script name
+ * @return {Promise<number>} exit status
  */
 function main(args)
 {
@@ -62,24 +70,44 @@ function main(args)
     for (let script of args) {
         console.log("Processing '%s'", script);
 
-        let content = readFileSync(script, {encoding: "UTF-8"});
-        let output = content
+        let content = readFileSync(script, FILE_OPTIONS);
+        let filteredContent = content
             .replace(/[@]PACKAGE_NAME[@]/g, PACKAGE_NAME)
             .replace(/[@]PACKAGE_VERSION[@]/g, PACKAGE_VERSION);
-        writeFileSync(`${outputdir}/${basename(script)}`,
-            output, {encoding: "UTF-8"});
 
-        if (script.endsWith(".js")) {
-            let result = Terser.minify(output, MINIFY_OPTIONS);
-            if (result.error != null) {
-                throw result.error;
+        let name = basename(script);
+        writeFileSync(`${outputdir}/${name}`, filteredContent, FILE_OPTIONS);
+
+        if (name.endsWith(".js")) {
+            let minifiedName = name.replace(/\.js$/, ".min.js");
+            let options = Object.assign({}, MINIFY_OPTIONS, {
+                sourceMap: {
+                    url: `${minifiedName}.map`,
+                },
+            });
+            let minified = Terser.minify({[name]: filteredContent}, options);
+            if (minified.error != null) {
+                throw minified.error;
             }
-            writeFileSync(`${outputdir}/${basename(script, ".js")}.min.js`,
-                result.code, {encoding: "UTF-8"});
+            writeFileSync(`${outputdir}/${minifiedName}`, minified.code,
+                FILE_OPTIONS);
+            if (minified.map != null) {
+                writeFileSync(`${outputdir}/${minifiedName}.map`,
+                    minified.map, FILE_OPTIONS);
+            }
         }
     }
+
+    return new Promise(
+        (resolve) => {
+            resolve(0);
+        });
 }
 
 if (require.main === module) {
-    exit(main(argv.slice(2)))
+    main(argv.slice(2))
+    .then(
+        (status) => {
+            exit(status);
+        });
 }
