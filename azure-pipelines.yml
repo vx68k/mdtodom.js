@@ -5,6 +5,8 @@
 # permitted in any medium without royalty provided the copyright notice and
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
+variables:
+  distName: kazssym-mdtodom-1.0.0-beta.1
 trigger:
   - master
   - release/*
@@ -18,7 +20,7 @@ stages:
         steps:
           - task: NodeTool@0
             inputs:
-              versionSpec: "8"
+              versionSpec: ~8
           - bash: |
               npm install-test
             displayName: Test
@@ -27,7 +29,7 @@ stages:
           - bash: |
               npm pack || exit $?
               mkdir -p _dist
-              mv *.tgz _dist/
+              mv -f '$(distName)'.* _dist/
             displayName: Make package archive
           - publish: _dist
             artifact: dist
@@ -45,9 +47,9 @@ stages:
             artifact: dist
           - task: NodeTool@0
             inputs:
-              versionSpec: "8"
+              versionSpec: ~8
           - task: Npm@1
             inputs:
               command: custom
-              customCommand: publish $(Agent.BuildDirectory)/dist/*.tgz
+              customCommand: publish $(Agent.BuildDirectory)/dist/$(distName).tgz
               customEndpoint: npmjs
