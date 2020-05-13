@@ -4,8 +4,9 @@
     "homepage": "https://vx68k.bitbucket.io/mdtodom.js/",
     "license": "MIT",
     "files": [
-        "prepack.sh",
-        "**/*.js"
+        "browser/**/*.js",
+        "etc",
+        "deploy"
     ],
     "browser": {},
     "repository": {
@@ -13,7 +14,7 @@
         "url": "https://github.com/vx68k/mdtodom.js.git"
     },
     "scripts": {
-        "prepare": "node ./etc/prepare.js *.js"
+        "prepare": "node ./etc/prepare.js browser/*.js"
     },
     "devDependencies": {
         "terser": "~4"
