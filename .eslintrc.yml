@@ -1,24 +1,22 @@
 # .eslintrc.yml
-# Copyright (C) 2018 Kaz Nishimura
+# Copyright (C) 2018-2020 Kaz Nishimura
 #
 # Copying and distribution of this file, with or without modification, are
 # permitted in any medium without royalty provided the copyright notice and
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
 extends: eslint:recommended
-parserOptions:
-  sourceType: module
 env:
-  es6: true
-  browser: true
+  es2015: true
+  node: true
 overrides:
   - files:
-      - etc/*.js
+      - browser/*
     parserOptions:
-      sourceType: script
+      sourceType: module
     env:
-      browser: false
-      node: true
+      node: false
+      browser: true
 ignorePatterns:
-  - /deploy/*
+  - deploy/*
 root: true
