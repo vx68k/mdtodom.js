@@ -1,6 +1,6 @@
 {
     "name": "@kazssym/mdtodom",
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.2",
     "description": "Module script to render Markdown directrly into DOM on web browsers",
     "keywords": [
         "browser",
