@@ -106,8 +106,7 @@ function main(args)
 
 if (require.main === module) {
     main(argv.slice(2))
-    .then(
-        (status) => {
+        .then((status) => {
             exit(status);
         });
 }
