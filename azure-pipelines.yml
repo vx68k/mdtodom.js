@@ -51,8 +51,10 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: ~8
-          - task: Npm@1
+          - task: npmAuthenticate@0
             inputs:
-              command: custom
-              customCommand: publish $(Agent.BuildDirectory)/dist/$(distName).tgz
+              workingFile: .npmrc
               customEndpoint: npmjs
+          - bash: |
+              npm publish $(Agent.BuildDirectory)/dist/$(distName).tgz
+            displayName: Upload
