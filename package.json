@@ -1,7 +1,7 @@
 {
-    "name": "@kazssym/mdtodom",
-    "version": "1.0.0-beta.3",
-    "description": "Module script to render Markdown directrly into DOM on web browsers",
+    "name": "commonmark-to-dom",
+    "version": "1.0.0",
+    "description": "Module script to render Markdown directly into DOM on web browsers",
     "keywords": [
         "browser",
         "es2015",
