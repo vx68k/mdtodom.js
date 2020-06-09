@@ -231,10 +231,10 @@ function start(/* event */)
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
-if (document.readyState == "loading") {
-    document.addEventListener("DOMContentLoaded", start);
-}
-else {
+if (document.readyState != "loading") {
     // The 'DOMContentLoaded' event has already been fired.
     start();
+}
+else {
+    document.addEventListener("DOMContentLoaded", start);
 }
