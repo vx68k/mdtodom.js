@@ -14,6 +14,7 @@ overrides:
       - browser/*
     parserOptions:
       sourceType: module
+      ecmaVersion: 2020 # This is required for 'import.meta'.
     env:
       node: false
       browser: true
