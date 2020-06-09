@@ -150,7 +150,7 @@ function sleep(millis)
  */
 function loadCommonMark()
 {
-    let commonMarkScript = Object.assign(
+    let script = Object.assign(
         document.createElement("script"),
         {
             id: "commonmark",
@@ -160,11 +160,11 @@ function loadCommonMark()
             crossOrigin: "anonymous",
             integrity: COMMONMARK_INTEGRITY,
         });
-    document.head.appendChild(commonMarkScript);
+    document.head.appendChild(script);
 
     return Promise.race([
         sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded("commonmark", commonMarkScript)
+        waitForScriptLoaded("commonmark", script)
     ]);
 }
 
