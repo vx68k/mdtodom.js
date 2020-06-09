@@ -52,6 +52,17 @@ import { DOMRenderer } from "./mdtodom.js";
   */
  const MODULE_NAME = "mdview.js";
 
+/**
+ * URL of the 'commonmark.js' script.
+ */
+const COMMONMARK_URL =
+    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.1/commonmark.min.js";
+
+/**
+ * Integrity metadata for the 'commonmark.js' script.
+ */
+const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
+
 function loadPage(container, path) {
     // Measuring timings.
     if ("gtag" in self && "performance" in self) {
@@ -139,10 +150,21 @@ function sleep(millis)
  */
 function loadCommonMark()
 {
-    let node = document.getElementById("commonmark-script") || document;
+    let commonMarkScript = Object.assign(
+        document.createElement("script"),
+        {
+            id: "commonmark",
+            src: COMMONMARK_URL,
+            async: true,
+            defer: true,
+            crossOrigin: "anonymous",
+            integrity: COMMONMARK_INTEGRITY,
+        });
+    document.head.appendChild(commonMarkScript);
+
     return Promise.race([
         sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded("commonmark", node)
+        waitForScriptLoaded("commonmark", commonMarkScript)
     ]);
 }
 
@@ -151,7 +173,8 @@ function loadCommonMark()
  *
  * @param {string} containerId DOM identifier of the conainer element
  */
-function render(containerId) {
+function render(containerId)
+{
     let container = document.getElementById(containerId);
     if (container != null) {
         let path = null;
