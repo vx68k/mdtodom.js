@@ -180,7 +180,11 @@ function render(containerId) {
  */
 function start(/* event */)
 {
-    render("mdview");
+    let containerId = new URL(import.meta.url).hash.substring(1);
+    if (containerId == "") {
+        containerId = "mdview";
+    }
+    render(containerId);
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
