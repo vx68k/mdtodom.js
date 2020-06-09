@@ -148,7 +148,7 @@ export function sleep(millis)
  */
 export function waitForScriptLoaded(script, name)
 {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         if (name in window) {
             resolve();
         }
@@ -157,8 +157,6 @@ export function waitForScriptLoaded(script, name)
                 if (name in window) {
                     resolve();
                 }
-
-                reject(`'${name}' not set by the script`);
             });
         }
     });
