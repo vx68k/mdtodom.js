@@ -74,53 +74,48 @@ const COMMONMARK_URL =
  */
 const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
 
-function loadPage(container, path) {
-    // Measuring timings.
-    if ("gtag" in self && "performance" in self) {
-        gtag("event", "timing_complete", {
-            "name": "mdview_begin",
-            "value": Math.floor(performance.now()),
+/**
+ * Loads a Markdown resource into a container element.
+ *
+ * @param {Element} container an `Element` object
+ * @param {string} [name] the name of a resource
+ * @return {Promise<undefined>} a `Promise` object that will be resolved when
+ * the resource is loaded and rendered.
+ */
+function loadPage(container, name)
+{
+    if (name == null) {
+        name = container.dataset.welcomePage;
+        if (name == null) {
+            name = "welcome.md";
+        }
+    }
+
+    return fetch(name,
+        {
+            mode: "same-origin",
+            headers: {
+                "Accept": "text/*",
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+
+            return `# ${response.status} ${response.statusText}\n`;
+        })
+        .then((text) => {
+            let parser = new window.commonmark.Parser();
+            let tree = parser.parse(text);
+
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+
+            let renderer = new DOMRenderer(document);
+            renderer.render(tree, container);
         });
-    }
-
-    if (path == null) {
-        path = container.dataset.welcomePage;
-        if (path == null) {
-            path = "welcome.md";
-        }
-    }
-
-    return fetch(path, {
-        mode: "same-origin",
-        headers: {
-            "Accept": "text/*",
-        },
-    }).then((response) => {
-        if (response.ok) {
-            return response.text();
-        }
-        return "# " + response.status + " " + response.statusText + "\n";
-    }).then((text) => {
-        let parser = new window.commonmark.Parser();
-        let tree = parser.parse(text);
-
-        while (container.hasChildNodes()) {
-            container.removeChild(container.lastChild);
-        }
-
-        let renderer = new DOMRenderer(document);
-        renderer.render(tree, container);
-
-        // Measuring timings.
-        if ("gtag" in self && "performance" in self) {
-            gtag("event", "timing_complete", {
-                "name": "mdview_end",
-                "value": Math.floor(performance.now()),
-            });
-        }
-    }).catch((reason) => {
-        throw new Error(reason);
-    });
 }
 
 /**
