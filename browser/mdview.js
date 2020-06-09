@@ -221,7 +221,6 @@ function start(/* event */)
         .catch((reason) => {
             throw new Error(`Failed to load commonmark.js: ${reason}`);
         });
-    }
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
