@@ -143,7 +143,7 @@ export function sleep(millis)
  * for a `load` event
  * @param {string} name a property name to check whether the script has
  * been loaded or not
- * @return {Promise<Event>} a promise that will be resolved when the script
+ * @return {Promise<undefined>} a promise that will be resolved when the script
  * is loaded
  */
 export function waitForScriptLoaded(script, name)
