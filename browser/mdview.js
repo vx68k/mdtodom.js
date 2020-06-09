@@ -21,7 +21,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script.
+// This file is a module script and shall be in strict mode by default.
 
 /**
  * Client-side Markdown viewer.
