@@ -156,14 +156,13 @@ function waitForScriptLoaded(name, script)
             resolve();
         }
         else {
-            script.addEventListener("load",
-                () => {
-                    if (name in window) {
-                        resolve();
-                    }
+            script.addEventListener("load", () => {
+                if (name in window) {
+                    resolve();
+                }
 
-                    reject(`'${name}' not set by the script`);
-                });
+                reject(`'${name}' not set by the script`);
+            });
         }
     });
 }
