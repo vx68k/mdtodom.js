@@ -173,5 +173,21 @@ function run(containerId) {
     }
 }
 
+/**
+ * Runs the rendering task.
+ *
+ * @param {Event} event an optional DOM event
+ */
+function start(/* event */)
+{
+    run("mdview");
+}
+
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
-run("mdview");
+if (document.readyState == "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+}
+else {
+    // The 'DOMContentLoaded' event has already been fired.
+    start();
+}
