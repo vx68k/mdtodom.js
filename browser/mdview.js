@@ -24,12 +24,19 @@
 // This file is a module script and shall be in strict mode by default.
 
 /**
- * Client-side Markdown viewer.
+ * ECMAScript module of a client-side Markdown viewer.
+ *
+ * Use this module in a HTML file as follows:
+ *
+ * ```html
+ * <script src="mdview.min.js" type="module" async>
+ * </script>
+ * ```
  *
  * @module mdview.js
  */
 
-import { DOMRenderer } from "./mdtodom.js";
+import {DOMRenderer} from "./mdtodom.js";
 
 /**
  * Package name.
@@ -54,12 +61,16 @@ const MODULE_NAME = "mdview.js";
 
 /**
  * URL of the 'commonmark.js' script.
+ *
+ * @private
  */
 const COMMONMARK_URL =
     "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.1/commonmark.min.js";
 
 /**
  * Integrity metadata for the 'commonmark.js' script.
+ *
+ * @private
  */
 const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
 
