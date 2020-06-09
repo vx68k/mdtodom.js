@@ -77,10 +77,10 @@ const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI
 /**
  * Loads a Markdown resource into a container element.
  *
- * @param {Element} container an `Element` object
+ * @param {Element} container a DOM element
  * @param {string} [name] the name of a resource
- * @return {Promise<undefined>} a `Promise` object that will be resolved when
- * the resource is loaded and rendered.
+ * @return {Promise<undefined>} a promise that will be resolved when the
+ * resource is loaded and rendered.
  */
 function loadPage(container, name)
 {
@@ -119,11 +119,12 @@ function loadPage(container, name)
 }
 
 /**
- * Returns a `Promise` object that will be resolved after a duration elapsed.
+ * Returns a promise that will be resolved after a duration has elapsed.
  *
- * @param {number} millis a duration in milliseconds
- * @return {Promise<undefined>} a `Promise` object that will be resolved after
- * the specified duration elapsed
+ * @param {number} millis a duration to sleep in milliseconds
+ * @return {Promise<undefined>} a promise that will be resolved after the
+ * specified duration has elapsed
+ * @see {@link https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout WindowOrWorkerGlobalScope.setTimeout}
  */
 export function sleep(millis)
 {
@@ -165,7 +166,8 @@ function waitForScriptLoaded(script, name)
 /**
  * Gets the `commonmark.js` script loaded.
  *
- * @return {Promise} a promise object for the `commonmark.js` script
+ * @return {Promise} a promise that will be resolved when the `commonmark.js`
+ * script has been loaded
  * @private
  */
 function loadCommonMark()
@@ -191,7 +193,8 @@ function loadCommonMark()
 /**
  * Runs the rendering task.
  *
- * @param {Event} event an optional DOM event
+ * @param {Event} [event] an optional DOM event
+ * @private
  */
 function start(/* event */)
 {
