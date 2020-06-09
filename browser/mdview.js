@@ -81,6 +81,7 @@ const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI
  * @param {string} [name] the name of a resource
  * @return {Promise<undefined>} a promise that will be resolved when the
  * resource is loaded and rendered.
+ * @private
  */
 function loadPage(container, name)
 {
