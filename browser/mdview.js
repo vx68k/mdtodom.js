@@ -133,6 +133,13 @@ function waitForScriptLoaded(propertyName, node)
     });
 }
 
+/**
+ * Returns a `Promise` object that will be resolved after a duration elapsed.
+ *
+ * @param {number} millis a duration in milliseconds
+ * @return {Promise<undefined>} a `Promise` object that will be resolved after
+ * the specified duration elapsed
+ */
 function sleep(millis)
 {
     return new Promise((resolve) => {
