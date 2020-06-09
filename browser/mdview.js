@@ -146,7 +146,7 @@ export function sleep(millis)
  * @return {Promise<Event>} a promise that will be resolved when the script
  * is loaded
  */
-function waitForScriptLoaded(script, name)
+export function waitForScriptLoaded(script, name)
 {
     return new Promise((resolve, reject) => {
         if (name in window) {
