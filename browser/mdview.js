@@ -151,7 +151,7 @@ function loadCommonMark()
  *
  * @param {string} containerId DOM identifier of the conainer element
  */
-function run(containerId) {
+function render(containerId) {
     let container = document.getElementById(containerId);
     if (container != null) {
         let path = null;
@@ -180,7 +180,7 @@ function run(containerId) {
  */
 function start(/* event */)
 {
-    run("mdview");
+    render("mdview");
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
