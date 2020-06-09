@@ -124,27 +124,6 @@ function loadPage(container, path) {
 }
 
 /**
- * Wait for a script to be loaded.
- *
- * @param {string} propertyName property name to check whether the script has
- * been loaded or not
- * @param {Node} node a DOM node to listen a "load" event
- */
-function waitForScriptLoaded(propertyName, node)
-{
-    return new Promise((resolve) => {
-        if (propertyName in window) {
-            resolve();
-        }
-        else {
-            node.addEventListener("load", function () {
-                resolve();
-            });
-        }
-    });
-}
-
-/**
  * Returns a `Promise` object that will be resolved after a duration elapsed.
  *
  * @param {number} millis a duration in milliseconds
@@ -157,6 +136,35 @@ export function sleep(millis)
         setTimeout(() => {
             resolve();
         }, millis);
+    });
+}
+
+/**
+ * Waits for a script to be loaded.
+ *
+ * @param {string} name a property name to check whether the script has
+ * been loaded or not
+ * @param {HTMLScriptElement} script a `HTMLScriptElemnt` object that is
+ * listened for a `load` event
+ * @return {Promise<Event>} a `Promise` object that will be resolved when
+ * the script is loaded
+ */
+function waitForScriptLoaded(name, script)
+{
+    return new Promise((resolve, reject) => {
+        if (name in window) {
+            resolve();
+        }
+        else {
+            script.addEventListener("load",
+                () => {
+                    if (name in window) {
+                        resolve();
+                    }
+
+                    reject(`'${name}' not set by the script`);
+                });
+        }
     });
 }
 
