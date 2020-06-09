@@ -140,7 +140,7 @@ function waitForScriptLoaded(propertyName, node)
  * @return {Promise<undefined>} a `Promise` object that will be resolved after
  * the specified duration elapsed
  */
-function sleep(millis)
+export function sleep(millis)
 {
     return new Promise((resolve) => {
         setTimeout(() => {
