@@ -137,14 +137,14 @@ export function sleep(millis)
 /**
  * Waits for a script to be loaded.
  *
+ * @param {HTMLScriptElement} script a DOM HTML script element that is listened
+ * for a `load` event
  * @param {string} name a property name to check whether the script has
  * been loaded or not
- * @param {HTMLScriptElement} script a `HTMLScriptElemnt` object that is
- * listened for a `load` event
- * @return {Promise<Event>} a `Promise` object that will be resolved when
- * the script is loaded
+ * @return {Promise<Event>} a promise that will be resolved when the script
+ * is loaded
  */
-function waitForScriptLoaded(name, script)
+function waitForScriptLoaded(script, name)
 {
     return new Promise((resolve, reject) => {
         if (name in window) {
@@ -184,7 +184,7 @@ function loadCommonMark()
 
     return Promise.race([
         sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded("commonmark", script)
+        waitForScriptLoaded(script, "commonmark"),
     ]);
 }
 
