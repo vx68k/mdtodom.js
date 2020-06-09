@@ -187,45 +187,39 @@ function loadCommonMark()
 }
 
 /**
- * Loads and renders a Markdown document in a container element.
- *
- * @param {string} containerId DOM identifier of the conainer element
- */
-function render(containerId)
-{
-    let container = document.getElementById(containerId);
-    if (container != null) {
-        let path = null;
-        if (location.search.startsWith("?")) {
-            path = location.search.substring(1);
-            if (path.startsWith("view=")) {
-                path = path.substring(5);
-            }
-            if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-                path = null;
-            }
-        }
-
-        loadCommonMark()
-            .then(() => loadPage(container, path))
-            .catch((reason) => {
-                throw new Error("Failed to load commonmark.js: " + reason);
-            });
-    }
-}
-
-/**
  * Runs the rendering task.
  *
  * @param {Event} event an optional DOM event
  */
 function start(/* event */)
 {
-    let containerId = new URL(import.meta.url).hash.substring(1);
-    if (containerId == "") {
-        containerId = "mdview";
+    loadCommonMark()
+        .then(() => {
+            let containerId = new URL(import.meta.url).hash.substring(1);
+            if (containerId == "") {
+                containerId = "mdview";
+            }
+
+            let container = document.getElementById(containerId);
+            if (container != null) {
+                let path = null;
+                if (location.search.startsWith("?")) {
+                    path = location.search.substring(1);
+                    if (path.startsWith("view=")) {
+                        path = path.substring(5);
+                    }
+                    if (path.startsWith(".") || path.indexOf("/.") >= 0) {
+                        path = null;
+                    }
+                }
+
+                loadPage(container, path);
+            }
+        })
+        .catch((reason) => {
+            throw new Error(`Failed to load commonmark.js: ${reason}`);
+        });
     }
-    render(containerId);
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
