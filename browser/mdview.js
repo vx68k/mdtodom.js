@@ -90,7 +90,7 @@ function loadPage(container, path) {
         }
         return "# " + response.status + " " + response.statusText + "\n";
     }).then((text) => {
-        let parser = new commonmark.Parser();
+        let parser = new window.commonmark.Parser();
         let tree = parser.parse(text);
 
         while (container.hasChildNodes()) {
@@ -122,7 +122,7 @@ function loadPage(container, path) {
 function waitForScriptLoaded(propertyName, node)
 {
     return new Promise((resolve) => {
-        if (propertyName in self) {
+        if (propertyName in window) {
             resolve();
         }
         else {
