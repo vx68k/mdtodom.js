@@ -1,5 +1,5 @@
 // mdtodom.js
-// Copyright (C) 2018-2019 Kaz Nishimura
+// Copyright (C) 2018-2020 Kaz Nishimura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -21,7 +21,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script.
+// This file is a module script and shall be in strict mode by default.
 
 /**
  * Markdown-to-DOM renderer.
