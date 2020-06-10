@@ -1,5 +1,5 @@
 // mdview.js
-// Copyright (C) 2018 Kaz Nishimura
+// Copyright (C) 2018-2020 Kaz Nishimura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -21,108 +21,113 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script.
+// This file is a module script and shall be in strict mode by default.
 
 /**
- * Client-side Markdown viewer.
+ * ECMAScript module of a client-side Markdown viewer.
+ *
+ * Use this module in a HTML file as follows:
+ *
+ * ```html
+ * <script src="mdview.min.js" type="module" async>
+ * </script>
+ * ```
  *
  * @module mdview.js
  */
 
-import { DOMRenderer } from "./mdtodom.js";
+import {DOMRenderer} from "./mdtodom.js";
 
- /**
-  * Package name.
-  *
-  * @private
-  */
- const PACKAGE_NAME = "@PACKAGE_NAME@";
+/**
+ * Package name.
+ *
+ * @private
+ */
+const PACKAGE_NAME = "@PACKAGE_NAME@";
 
- /**
-  * Package version.
-  *
-  * @private
-  */
- const PACKAGE_VERSION = "@PACKAGE_VERSION@";
+/**
+ * Package version.
+ *
+ * @private
+ */
+const PACKAGE_VERSION = "@PACKAGE_VERSION@";
 
- /**
-  * Module name.
-  *
-  * @private
-  */
- const MODULE_NAME = "mdview.js";
+/**
+ * Module name.
+ *
+ * @private
+ */
+const MODULE_NAME = "mdview.js";
 
-function loadPage(container, path) {
-    // Measuring timings.
-    if ("gtag" in self && "performance" in self) {
-        gtag("event", "timing_complete", {
-            "name": "mdview_begin",
-            "value": Math.floor(performance.now()),
+/**
+ * URL of the 'commonmark.js' script.
+ *
+ * @private
+ */
+const COMMONMARK_URL =
+    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.1/commonmark.min.js";
+
+/**
+ * Integrity metadata for the 'commonmark.js' script.
+ *
+ * @private
+ */
+const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
+
+/**
+ * Loads a Markdown resource into a container element.
+ *
+ * @param {Element} container a DOM element
+ * @param {string} [name] the name of a resource
+ * @return {Promise<undefined>} a promise that will be resolved when the
+ * resource is loaded and rendered.
+ * @private
+ */
+function loadPage(container, name)
+{
+    if (name == null) {
+        name = container.dataset.welcomePage;
+        if (name == null) {
+            name = "welcome.md";
+        }
+    }
+
+    return fetch(name,
+        {
+            mode: "same-origin",
+            headers: {
+                "Accept": "text/*",
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            }
+
+            return `# ${response.status} ${response.statusText}\n`;
+        })
+        .then((text) => {
+            let parser = new window.commonmark.Parser();
+            let tree = parser.parse(text);
+
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+
+            let renderer = new DOMRenderer(document);
+            renderer.render(tree, container);
         });
-    }
-
-    if (path == null) {
-        path = container.dataset.welcomePage;
-        if (path == null) {
-            path = "welcome.md";
-        }
-    }
-
-    return fetch(path, {
-        mode: "same-origin",
-        headers: {
-            "Accept": "text/*",
-        },
-    }).then((response) => {
-        if (response.ok) {
-            return response.text();
-        }
-        return "# " + response.status + " " + response.statusText + "\n";
-    }).then((text) => {
-        let parser = new commonmark.Parser();
-        let tree = parser.parse(text);
-
-        while (container.hasChildNodes()) {
-            container.removeChild(container.lastChild);
-        }
-
-        let renderer = new DOMRenderer(document);
-        renderer.render(tree, container);
-
-        // Measuring timings.
-        if ("gtag" in self && "performance" in self) {
-            gtag("event", "timing_complete", {
-                "name": "mdview_end",
-                "value": Math.floor(performance.now()),
-            });
-        }
-    }).catch((reason) => {
-        throw new Error(reason);
-    });
 }
 
 /**
- * Wait for a script to be loaded.
+ * Returns a promise that will be resolved after a duration has elapsed.
  *
- * @param {string} propertyName property name to check whether the script has
- * been loaded or not
- * @param {Node} node a DOM node to listen a "load" event
+ * @param {number} millis a duration to sleep in milliseconds
+ * @return {Promise<undefined>} a promise that will be resolved after the
+ * specified duration has elapsed
+ * @see {@link https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout WindowOrWorkerGlobalScope.setTimeout}
  */
-function waitForScriptLoaded(propertyName, node)
-{
-    return new Promise((resolve) => {
-        if (propertyName in self) {
-            resolve();
-        }
-        else {
-            node.addEventListener("load", function () {
-                resolve();
-            });
-        }
-    });
-}
-
-function sleep(millis)
+export function sleep(millis)
 {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -132,46 +137,99 @@ function sleep(millis)
 }
 
 /**
+ * Waits for a script to be loaded.
+ *
+ * @param {HTMLScriptElement} script a DOM HTML script element that is listened
+ * for a `load` event
+ * @param {string} name a property name to check whether the script has
+ * been loaded or not
+ * @return {Promise<undefined>} a promise that will be resolved when the script
+ * is loaded
+ */
+export function waitForScriptLoaded(script, name)
+{
+    return new Promise((resolve) => {
+        if (name in window) {
+            resolve();
+        }
+        else {
+            script.addEventListener("load", () => {
+                if (name in window) {
+                    resolve();
+                }
+            });
+        }
+    });
+}
+
+/**
  * Gets the `commonmark.js` script loaded.
  *
- * @return {Promise} a promise object for the `commonmark.js` script
+ * @return {Promise} a promise that will be resolved when the `commonmark.js`
+ * script has been loaded
  * @private
  */
 function loadCommonMark()
 {
-    let node = document.getElementById("commonmark-script") || document;
+    let script = Object.assign(
+        document.createElement("script"),
+        {
+            id: "commonmark",
+            src: COMMONMARK_URL,
+            async: true,
+            defer: true,
+            crossOrigin: "anonymous",
+            integrity: COMMONMARK_INTEGRITY,
+        });
+    document.head.appendChild(script);
+
     return Promise.race([
         sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded("commonmark", node)
+        waitForScriptLoaded(script, "commonmark"),
     ]);
 }
 
 /**
- * Loads and renders a Markdown document in a container element.
+ * Runs the rendering task.
  *
- * @param {string} containerId DOM identifier of the conainer element
+ * @param {Event} [event] an optional DOM event
+ * @private
  */
-function run(containerId) {
-    let container = document.getElementById(containerId);
-    if (container != null) {
-        let path = null;
-        if (location.search.startsWith("?")) {
-            path = location.search.substring(1);
-            if (path.startsWith("view=")) {
-                path = path.substring(5);
+function start(/* event */)
+{
+    loadCommonMark()
+        .then(() => {
+            let containerId = new URL(import.meta.url).hash.substring(1);
+            if (containerId == "") {
+                containerId = "mdview";
             }
-            if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-                path = null;
-            }
-        }
 
-        loadCommonMark()
-            .then(() => loadPage(container, path))
-            .catch((reason) => {
-                throw new Error("Failed to load commonmark.js: " + reason);
-            });
-    }
+            let container = document.getElementById(containerId);
+            if (container != null) {
+                let path = null;
+                if (location.search.startsWith("?")) {
+                    path = location.search.substring(1);
+                    if (path.startsWith("view=")) {
+                        path = path.substring(5);
+                    }
+                    if (path.startsWith(".") || path.indexOf("/.") >= 0) {
+                        path = null;
+                    }
+                }
+
+                loadPage(container, path);
+            }
+        })
+        .catch((reason) => {
+            throw new Error(`Failed to load commonmark.js: ${reason}`);
+        });
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
-run("mdview");
+if (document.readyState != "loading") {
+    // The 'DOMContentLoaded' event has already been fired.
+    start();
+}
+else {
+    document.addEventListener("DOMContentLoaded", start);
+}

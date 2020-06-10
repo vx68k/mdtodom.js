@@ -72,6 +72,7 @@ function main(args)
 
         let content = readFileSync(script, FILE_OPTIONS);
         let filteredContent = content
+            .replace(/\.\/mdtodom\.js/g, "./mdtodom.min.js")
             .replace(/[@]PACKAGE_NAME[@]/g, PACKAGE_NAME)
             .replace(/[@]PACKAGE_VERSION[@]/g, PACKAGE_VERSION);
 

@@ -1,6 +1,6 @@
 {
     "name": "commonmark-to-dom",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Module script to render Markdown directly into DOM on web browsers",
     "keywords": [
         "browser",
@@ -31,7 +31,7 @@
         "url": "https://github.com/vx68k/mdtodom.js.git"
     },
     "scripts": {
-        "prepare": "node ./etc/prepare.js browser/*.js"
+        "prepare": "node ./prepare.js browser/*.js"
     },
     "devDependencies": {
         "terser": "~4"
