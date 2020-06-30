@@ -50,6 +50,35 @@ const PACKAGE_VERSION = "@PACKAGE_VERSION@";
  */
 const MODULE_NAME = "mdtodom.js";
 
+export class CommonMarkTreeIterator
+{
+    constructor(walker)
+    {
+        this._walker = walker;
+
+        Object.seal(this);
+    }
+
+    get walker()
+    {
+        return this._walker;
+    }
+
+    next()
+    {
+        let step = this._walker.next();
+        return {
+            done: (step == null),
+            value: step,
+        };
+    }
+
+    [Symbol.iterator]()
+    {
+        return this;
+    }
+}
+
 /**
  * DOM renderer for commonmark.js ASTs.
  *
@@ -83,11 +112,10 @@ export class DOMRenderer
             root = this.document.createDocumentFragment();
         }
 
-        let walker = tree.walker();
         let document = this.document;
         let ancestors = [];
         let parent = null;
-        for (let step = walker.next(); step != null; step = walker.next()) {
+        for (let step of new CommonMarkTreeIterator(tree.walker())) {
             let node = step.node;
             if (step.entering) {
                 let child = null;
