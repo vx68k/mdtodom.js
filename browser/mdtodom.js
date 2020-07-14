@@ -1,5 +1,5 @@
 // mdtodom.js
-// Copyright (C) 2018-2019 Kaz Nishimura
+// Copyright (C) 2018-2020 Kaz Nishimura
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -21,13 +21,63 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script.
+// This file is a module script and shall be in strict mode by default.
 
 /**
  * Markdown-to-DOM renderer.
  *
- * @module mdtodom
+ * @module mdtodom.js
  */
+
+/**
+ * Package name.
+ *
+ * @private
+ */
+const PACKAGE_NAME = "@PACKAGE_NAME@";
+
+/**
+ * Package version.
+ *
+ * @private
+ */
+const PACKAGE_VERSION = "@PACKAGE_VERSION@";
+
+/**
+ * Module name.
+ *
+ * @private
+ */
+const MODULE_NAME = "mdtodom.js";
+
+export class CommonMarkTreeIterator
+{
+    constructor(walker)
+    {
+        this._walker = walker;
+
+        Object.seal(this);
+    }
+
+    get walker()
+    {
+        return this._walker;
+    }
+
+    next()
+    {
+        let step = this._walker.next();
+        return {
+            done: (step == null),
+            value: step,
+        };
+    }
+
+    [Symbol.iterator]()
+    {
+        return this;
+    }
+}
 
 /**
  * DOM renderer for commonmark.js ASTs.
@@ -62,11 +112,10 @@ export class DOMRenderer
             root = this.document.createDocumentFragment();
         }
 
-        let walker = tree.walker();
         let document = this.document;
         let ancestors = [];
         let parent = null;
-        for (let step = walker.next(); step != null; step = walker.next()) {
+        for (let step of new CommonMarkTreeIterator(tree.walker())) {
             let node = step.node;
             if (step.entering) {
                 let child = null;
@@ -225,3 +274,5 @@ export function render(document, tree, root)
     let renderer = new DOMRenderer(document);
     return renderer.render(tree, root);
 }
+
+console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
