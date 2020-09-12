@@ -101,10 +101,7 @@ function main(args)
         }
     }
 
-    return new Promise(
-        (resolve) => {
-            resolve(0);
-        });
+    return Promise.resolve(0);
 }
 
 if (require.main === module) {
