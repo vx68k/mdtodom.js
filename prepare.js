@@ -53,7 +53,7 @@ const FILE_OPTIONS = Object.freeze({
  * @param {Array<string>} args command-line arguments after the script name
  * @return {Promise<number>} exit status
  */
-function main(args)
+async function main(args)
 {
     if (args == null) {
         args = [];
@@ -86,22 +86,19 @@ function main(args)
                     url: `${minifiedName}.map`,
                 },
             });
-            Terser.minify({[name]: filteredContent}, options)
-                .then((minified) => {
-                    writeFileSync(`${outputdir}/${minifiedName}`, minified.code,
-                        FILE_OPTIONS);
-                    if (minified.map != null) {
-                        writeFileSync(`${outputdir}/${minifiedName}.map`,
-                            minified.map, FILE_OPTIONS);
-                    }
-                })
-                .catch((error) => {
-                    return Promise.reject(error);
-                });
+            let minified = await Terser.minify({
+                [name]: filteredContent,
+            }, options);
+            writeFileSync(`${outputdir}/${minifiedName}`, minified.code,
+                FILE_OPTIONS);
+            if (minified.map != null) {
+                writeFileSync(`${outputdir}/${minifiedName}.map`,
+                    minified.map, FILE_OPTIONS);
+            }
         }
     }
 
-    return Promise.resolve(0);
+    return 0;
 }
 
 if (require.main === module) {
