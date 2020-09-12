@@ -86,16 +86,18 @@ function main(args)
                     url: `${minifiedName}.map`,
                 },
             });
-            let minified = Terser.minify({[name]: filteredContent}, options);
-            if (minified.error != null) {
-                throw minified.error;
-            }
-            writeFileSync(`${outputdir}/${minifiedName}`, minified.code,
-                FILE_OPTIONS);
-            if (minified.map != null) {
-                writeFileSync(`${outputdir}/${minifiedName}.map`,
-                    minified.map, FILE_OPTIONS);
-            }
+            Terser.minify({[name]: filteredContent}, options)
+                .then((minified) => {
+                    writeFileSync(`${outputdir}/${minifiedName}`, minified.code,
+                        FILE_OPTIONS);
+                    if (minified.map != null) {
+                        writeFileSync(`${outputdir}/${minifiedName}.map`,
+                            minified.map, FILE_OPTIONS);
+                    }
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
         }
     }
 
