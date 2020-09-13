@@ -6,7 +6,7 @@
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
 variables:
-  distName: commonmark-to-dom-3.0.1
+  distName: commonmark-to-dom-3.0.2
 trigger:
   - master
   - release/*
