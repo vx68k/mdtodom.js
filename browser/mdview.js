@@ -21,8 +21,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script and shall be in strict mode by default.
-
 /**
  * ECMAScript module of a client-side Markdown viewer.
  *
@@ -35,6 +33,8 @@
  *
  * @module mdview.js
  */
+
+// This file is a module script and shall be in strict mode by default.
 
 import {DOMRenderer} from "./mdtodom.js";
 
