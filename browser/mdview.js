@@ -65,14 +65,15 @@ const MODULE_NAME = "mdview.js";
  * @private
  */
 const COMMONMARK_URL =
-    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.1/commonmark.min.js";
+    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.2/commonmark.min.js";
 
 /**
  * Integrity metadata for the 'commonmark.js' script.
  *
  * @private
  */
-const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
+const COMMONMARK_INTEGRITY =
+    "sha512-3Ylz2XJ+5tl5PqwXaFkQ488A2rATWL90CN/RJ+xA5Ge37IBddaiLbHWKoz6C7O61IgT2sGgYH1lNZZT4bEkwEg==";
 
 /**
  * Loads a Markdown resource into a container element.
