@@ -67,13 +67,8 @@ const MODULE_NAME = "mdview.js";
 const COMMONMARK_URL =
     "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.2/commonmark.min.js";
 
-/**
- * Integrity metadata for the 'commonmark.js' script.
- *
- * @private
- */
-const COMMONMARK_INTEGRITY =
-    "sha512-3Ylz2XJ+5tl5PqwXaFkQ488A2rATWL90CN/RJ+xA5Ge37IBddaiLbHWKoz6C7O61IgT2sGgYH1lNZZT4bEkwEg==";
+
+let commonmarkImported = import(COMMONMARK_URL);
 
 /**
  * Loads a Markdown resource into a container element.
@@ -138,59 +133,6 @@ export function sleep(millis)
 }
 
 /**
- * Waits for a script to be loaded.
- *
- * @param {HTMLScriptElement} script a DOM HTML script element that is listened
- * for a `load` event
- * @param {string} name a property name to check whether the script has
- * been loaded or not
- * @return {Promise<undefined>} a promise that will be resolved when the script
- * is loaded
- */
-export function waitForScriptLoaded(script, name)
-{
-    return new Promise((resolve) => {
-        if (name in window) {
-            resolve();
-        }
-        else {
-            script.addEventListener("load", () => {
-                if (name in window) {
-                    resolve();
-                }
-            });
-        }
-    });
-}
-
-/**
- * Gets the `commonmark.js` script loaded.
- *
- * @return {Promise} a promise that will be resolved when the `commonmark.js`
- * script has been loaded
- * @private
- */
-function loadCommonMark()
-{
-    let script = Object.assign(
-        document.createElement("script"),
-        {
-            id: "commonmark",
-            src: COMMONMARK_URL,
-            async: true,
-            defer: true,
-            crossOrigin: "anonymous",
-            integrity: COMMONMARK_INTEGRITY,
-        });
-    document.head.appendChild(script);
-
-    return Promise.race([
-        sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded(script, "commonmark"),
-    ]);
-}
-
-/**
  * Runs the rendering task.
  *
  * @param {Event} [event] an optional DOM event
@@ -198,7 +140,7 @@ function loadCommonMark()
  */
 function start(/* event */)
 {
-    loadCommonMark()
+    commonmarkImported
         .then(() => {
             let containerId = new URL(import.meta.url).hash.substring(1);
             if (containerId == "") {
