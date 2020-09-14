@@ -116,23 +116,6 @@ function loadPage(container, name)
 }
 
 /**
- * Returns a promise that will be resolved after a duration has elapsed.
- *
- * @param {number} millis a duration to sleep in milliseconds
- * @return {Promise<undefined>} a promise that will be resolved after the
- * specified duration has elapsed
- * @see {@link https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout WindowOrWorkerGlobalScope.setTimeout}
- */
-export function sleep(millis)
-{
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, millis);
-    });
-}
-
-/**
  * Runs the rendering task.
  *
  * @param {Event} [event] an optional DOM event
