@@ -4,10 +4,11 @@
     "description": "Module script to render Markdown directly into DOM on web browsers",
     "keywords": [
         "browser",
-        "es2015",
+        "es2017",
         "module",
         "es-module",
         "dom",
+        "dom-api",
         "markdown",
         "commonmark"
     ],
