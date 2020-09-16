@@ -79,7 +79,7 @@ let commonmarkImported = import(COMMONMARK_URL);
  * resource is loaded and rendered.
  * @private
  */
-function loadPage(container, name)
+async function loadPage(container, name)
 {
     if (name == null) {
         name = container.dataset.welcomePage;
@@ -88,31 +88,25 @@ function loadPage(container, name)
         }
     }
 
-    return fetch(name,
-        {
-            mode: "same-origin",
-            headers: {
-                "Accept": "text/*",
-            },
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
+    let response = await fetch(name, {
+        mode: "same-origin",
+        headers: {
+            "Accept": "text/*",
+        },
+    });
 
-            return `# ${response.status} ${response.statusText}\n`;
-        })
-        .then((text) => {
-            let parser = new window.commonmark.Parser();
-            let tree = parser.parse(text);
+    let text = `# ${response.status} ${response.statusText}\n`;
+    if (response.ok) {
+        text = await response.text();
+    }
 
-            while (container.hasChildNodes()) {
-                container.removeChild(container.lastChild);
-            }
+    while (container.hasChildNodes()) {
+        container.removeChild(container.lastChild);
+    }
 
-            let renderer = new DOMRenderer(document);
-            renderer.render(tree, container);
-        });
+    let parser = new window.commonmark.Parser();
+    let renderer = new DOMRenderer(document);
+    renderer.render(parser.parse(text), container);
 }
 
 /**
@@ -143,7 +137,7 @@ function start(/* event */)
                     }
                 }
 
-                loadPage(container, path);
+                return loadPage(container, path);
             }
         })
         .catch((reason) => {
