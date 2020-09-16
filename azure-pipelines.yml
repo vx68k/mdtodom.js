@@ -6,11 +6,10 @@
 # this notice are preserved.  This file is offered as-is, without any warranty.
 ---
 variables:
-  distName: commonmark-to-dom-3.0.0
+  distName: commonmark-to-dom-4.0.0
 trigger:
   - master
   - release/*
-  - feature/*
 stages:
   - stage: Default
     jobs:

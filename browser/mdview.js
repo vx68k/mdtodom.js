@@ -21,8 +21,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-// This file is a module script and shall be in strict mode by default.
-
 /**
  * ECMAScript module of a client-side Markdown viewer.
  *
@@ -35,6 +33,8 @@
  *
  * @module mdview.js
  */
+
+// This file is a module script and shall be in strict mode by default.
 
 import {DOMRenderer} from "./mdtodom.js";
 
@@ -65,14 +65,10 @@ const MODULE_NAME = "mdview.js";
  * @private
  */
 const COMMONMARK_URL =
-    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.1/commonmark.min.js";
+    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.2/commonmark.min.js";
 
-/**
- * Integrity metadata for the 'commonmark.js' script.
- *
- * @private
- */
-const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI=";
+
+let commonmarkImported = import(COMMONMARK_URL);
 
 /**
  * Loads a Markdown resource into a container element.
@@ -83,7 +79,7 @@ const COMMONMARK_INTEGRITY = "sha256-cJ/MjQVItrJja/skVD57W8McWNeVq14/h4qOuq++CvI
  * resource is loaded and rendered.
  * @private
  */
-function loadPage(container, name)
+async function loadPage(container, name)
 {
     if (name == null) {
         name = container.dataset.welcomePage;
@@ -92,101 +88,25 @@ function loadPage(container, name)
         }
     }
 
-    return fetch(name,
-        {
-            mode: "same-origin",
-            headers: {
-                "Accept": "text/*",
-            },
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.text();
-            }
-
-            return `# ${response.status} ${response.statusText}\n`;
-        })
-        .then((text) => {
-            let parser = new window.commonmark.Parser();
-            let tree = parser.parse(text);
-
-            while (container.hasChildNodes()) {
-                container.removeChild(container.lastChild);
-            }
-
-            let renderer = new DOMRenderer(document);
-            renderer.render(tree, container);
-        });
-}
-
-/**
- * Returns a promise that will be resolved after a duration has elapsed.
- *
- * @param {number} millis a duration to sleep in milliseconds
- * @return {Promise<undefined>} a promise that will be resolved after the
- * specified duration has elapsed
- * @see {@link https://developer.mozilla.org/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout WindowOrWorkerGlobalScope.setTimeout}
- */
-export function sleep(millis)
-{
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, millis);
+    let response = await fetch(name, {
+        mode: "same-origin",
+        headers: {
+            "Accept": "text/*",
+        },
     });
-}
 
-/**
- * Waits for a script to be loaded.
- *
- * @param {HTMLScriptElement} script a DOM HTML script element that is listened
- * for a `load` event
- * @param {string} name a property name to check whether the script has
- * been loaded or not
- * @return {Promise<undefined>} a promise that will be resolved when the script
- * is loaded
- */
-export function waitForScriptLoaded(script, name)
-{
-    return new Promise((resolve) => {
-        if (name in window) {
-            resolve();
-        }
-        else {
-            script.addEventListener("load", () => {
-                if (name in window) {
-                    resolve();
-                }
-            });
-        }
-    });
-}
+    let text = `# ${response.status} ${response.statusText}\n`;
+    if (response.ok) {
+        text = await response.text();
+    }
 
-/**
- * Gets the `commonmark.js` script loaded.
- *
- * @return {Promise} a promise that will be resolved when the `commonmark.js`
- * script has been loaded
- * @private
- */
-function loadCommonMark()
-{
-    let script = Object.assign(
-        document.createElement("script"),
-        {
-            id: "commonmark",
-            src: COMMONMARK_URL,
-            async: true,
-            defer: true,
-            crossOrigin: "anonymous",
-            integrity: COMMONMARK_INTEGRITY,
-        });
-    document.head.appendChild(script);
+    while (container.hasChildNodes()) {
+        container.removeChild(container.lastChild);
+    }
 
-    return Promise.race([
-        sleep(5000).then(() => Promise.reject("Timed out")),
-        waitForScriptLoaded(script, "commonmark"),
-    ]);
+    let parser = new window.commonmark.Parser();
+    let renderer = new DOMRenderer(document);
+    renderer.render(parser.parse(text), container);
 }
 
 /**
@@ -197,7 +117,7 @@ function loadCommonMark()
  */
 function start(/* event */)
 {
-    loadCommonMark()
+    commonmarkImported
         .then(() => {
             let containerId = new URL(import.meta.url).hash.substring(1);
             if (containerId == "") {
@@ -217,7 +137,7 @@ function start(/* event */)
                     }
                 }
 
-                loadPage(container, path);
+                return loadPage(container, path);
             }
         })
         .catch((reason) => {

@@ -1,13 +1,14 @@
 {
     "name": "commonmark-to-dom",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "description": "Module script to render Markdown directly into DOM on web browsers",
     "keywords": [
         "browser",
-        "es2015",
+        "es2017",
         "module",
         "es-module",
         "dom",
+        "dom-api",
         "markdown",
         "commonmark"
     ],
@@ -22,8 +23,8 @@
     },
     "files": [
         "browser/**/*.js",
-        "etc",
-        "deploy"
+        "deploy/*",
+        "*.js"
     ],
     "browser": {},
     "repository": {
@@ -34,6 +35,6 @@
         "prepare": "node ./prepare.js browser/*.js"
     },
     "devDependencies": {
-        "terser": "~4"
+        "terser": "~5"
     }
 }
