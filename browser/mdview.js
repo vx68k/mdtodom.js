@@ -119,25 +119,23 @@ function start(/* event */)
 {
     let url = new URL(import.meta.url);
     let containerId = url.hash.substring(1);
-    if (containerId == "") {
-        containerId = "mdview";
-    }
+    if (containerId != "") {
+        let container = document.getElementById(containerId);
+        if (container != null) {
+            let path = null;
+            if (location.search.startsWith("?")) {
+                path = location.search.substring(1);
+                if (path.startsWith("view=")) {
+                    path = path.substring(5);
+                }
+                if (path.startsWith(".") || path.indexOf("/.") >= 0) {
+                    path = null;
+                }
+            }
 
-    let container = document.getElementById(containerId);
-    if (container != null) {
-        let path = null;
-        if (location.search.startsWith("?")) {
-            path = location.search.substring(1);
-            if (path.startsWith("view=")) {
-                path = path.substring(5);
-            }
-            if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-                path = null;
-            }
+            commonmarkImported
+                .then(() => loadPage(container, path));
         }
-
-        commonmarkImported
-            .then(() => loadPage(container, path));
     }
 }
 
