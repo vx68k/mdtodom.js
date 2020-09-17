@@ -117,24 +117,21 @@ async function loadPage(container, name)
  */
 function start(/* event */)
 {
-    let url = new URL(import.meta.url);
-    let containerId = url.hash.substring(1);
+    let scriptUrl = new URL(import.meta.url);
+    let containerId = scriptUrl.hash.substring(1);
     if (containerId != "") {
         let container = document.getElementById(containerId);
         if (container != null) {
-            let path = null;
-            if (location.search.startsWith("?")) {
-                path = location.search.substring(1);
-                if (path.startsWith("view=")) {
-                    path = path.substring(5);
-                }
-                if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-                    path = null;
+            let url = new URL(location.href);
+            let pathname = url.searchParams.get("view");
+            if (pathname != null) {
+                if (pathname.startsWith(".") || pathname.indexOf("/.") >= 0) {
+                    pathname = null;
                 }
             }
 
             commonmarkImported
-                .then(() => loadPage(container, path));
+                .then(() => loadPage(container, pathname));
         }
     }
 }
