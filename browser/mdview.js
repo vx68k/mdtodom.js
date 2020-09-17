@@ -117,30 +117,28 @@ async function loadPage(container, name)
  */
 function start(/* event */)
 {
-    commonmarkImported
-        .then(() => {
-            let url = new URL(import.meta.url);
-            let containerId = url.hash.substring(1);
-            if (containerId == "") {
-                containerId = "mdview";
-            }
+    let url = new URL(import.meta.url);
+    let containerId = url.hash.substring(1);
+    if (containerId == "") {
+        containerId = "mdview";
+    }
 
-            let container = document.getElementById(containerId);
-            if (container != null) {
-                let path = null;
-                if (location.search.startsWith("?")) {
-                    path = location.search.substring(1);
-                    if (path.startsWith("view=")) {
-                        path = path.substring(5);
-                    }
-                    if (path.startsWith(".") || path.indexOf("/.") >= 0) {
-                        path = null;
-                    }
-                }
-
-                return loadPage(container, path);
+    let container = document.getElementById(containerId);
+    if (container != null) {
+        let path = null;
+        if (location.search.startsWith("?")) {
+            path = location.search.substring(1);
+            if (path.startsWith("view=")) {
+                path = path.substring(5);
             }
-        });
+            if (path.startsWith(".") || path.indexOf("/.") >= 0) {
+                path = null;
+            }
+        }
+
+        commonmarkImported
+            .then(() => loadPage(container, path));
+    }
 }
 
 console.info("Loaded: %s (%s %s)", MODULE_NAME, PACKAGE_NAME, PACKAGE_VERSION);
