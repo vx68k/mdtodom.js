@@ -119,7 +119,8 @@ function start(/* event */)
 {
     commonmarkImported
         .then(() => {
-            let containerId = new URL(import.meta.url).hash.substring(1);
+            let url = new URL(import.meta.url);
+            let containerId = url.hash.substring(1);
             if (containerId == "") {
                 containerId = "mdview";
             }
