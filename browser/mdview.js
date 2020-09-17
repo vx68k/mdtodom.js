@@ -139,9 +139,6 @@ function start(/* event */)
 
                 return loadPage(container, path);
             }
-        })
-        .catch((reason) => {
-            throw new Error(`Failed to load commonmark.js: ${reason}`);
         });
 }
 
