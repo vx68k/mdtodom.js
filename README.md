@@ -1,7 +1,7 @@
 # Introduction
 
-The `mdtodom.js` script renders [commonmark.js] AST directly into DOM on
-modern browsers to make a webpage from a Markdown file.
+The `mdtodom.js` script renders a [commonmark.js] AST directly into DOM on
+modern web browsers to make a webpage from a Markdown content.
 
 [![(License)](https://img.shields.io/badge/license-MIT-blue.svg)][MIT]
 
@@ -11,12 +11,15 @@ modern browsers to make a webpage from a Markdown file.
 
 # Usage
 
+The basic usage of the script is shown below:
+
 ```javascript
-import { render } from "./mdtodom.js";
+import {DOMRenderer} from "./mdtodom.js";
 
 // Assuming commonmark.js has been loaded.
-let parser = new commonmark.Parser();
-let child = render(document, parser.parse("*something*"));
+let parser = new window.commonmark.Parser();
+let renderer = new DOMRenderer(document);
+let child = rendereer.render(parser.parse("*something* in Markdown"));
 
 let container = document.getElementById("container");
 container.appendChild(child);
