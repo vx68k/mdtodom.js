@@ -8,25 +8,26 @@
 <body>
 <main id="container">
 </main>
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.28.1/commonmark.min.js"
-    crossorigin="anonymous">
-</script>
 <script type="module" async>
 
-import {render} from "./deploy/mdtodom.js";
+import "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.2/commonmark.min.js";
+import {DOMRenderer} from "./deploy/mdtodom.js";
 
-fetch("README.md").then((response) => {
-    return response.text();
-}).then((text) => {
-    let parser = new commonmark.Parser();
-    let child = render(document, parser.parse(text));
+fetch("README.md")
+    .then((response) => {
+        return response.text();
+    })
+    .then((text) => {
+        let parser = new window.commonmark.Parser();
+        let renderer = new DOMRenderer(document);
+        let child = renderer.render(document, parser.parse(text));
 
-    let container = document.getElementById("container");
-    container.appendChild(child);
-}).catch((error) => {
-    window.alert(error);
-})
+        let container = document.getElementById("container");
+        container.appendChild(child);
+    })
+    .catch((error) => {
+        window.alert(error);
+    });
 
 </script>
 </body>
