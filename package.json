@@ -1,6 +1,6 @@
 {
     "name": "commonmark-to-dom",
-    "version": "5.0.0",
+    "version": "5.1.0",
     "description": "Module script to render Markdown directly into DOM on web browsers",
     "keywords": [
         "browser",
