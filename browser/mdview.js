@@ -65,7 +65,7 @@ const MODULE_NAME = "mdview.js";
  * @private
  */
 const COMMONMARK_URL =
-    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.2/commonmark.min.js";
+    "https://cdnjs.cloudflare.com/ajax/libs/commonmark/0.29.3/commonmark.min.js";
 
 
 let commonmarkImported = import(COMMONMARK_URL);
